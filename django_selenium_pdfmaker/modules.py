@@ -9,6 +9,7 @@ from selenium import webdriver
 from django.conf import settings
 from django.core.files.base import ContentFile, File
 from selenium.webdriver.chrome.options import Options
+from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 MODULE_PATH = os.path.abspath(__file__)     # Get path of current module file (modules.py file)
@@ -90,8 +91,21 @@ class PDFMaker:
 
     def get_pdf_from_html(self, path, filename='output-pdf', write=True):
         """ main method to call to make pdf. """
+        response = {
+            'status': False,            # Status of operation
+            'pdf': None,                # pdf object (ConvertedPDF instance)
+            'raw': None,                # Raw data binary of output pdf
+            'message': ''
+        }
 
-        self.driver.get(path)
+        try:
+            self.driver.get(path)
+        except Exception as e:
+            print('[-] Error happened fetching html page.')
+            response.update({
+                'message': _('Unable to connect to request URL')
+            })
+            return response
 
         # Add a delay so the page fully loaded,
         # Increase this value in case you have heavy loaded html page, which will be loaded longer!
@@ -109,12 +123,14 @@ class PDFMaker:
 
         result = base64.b64decode(result['data'])
 
-        response = {
-            'raw': result
-        }
+
         if write:
             # Write into database within /media/converted-pdf folder!
             pdf_obj = self.store_to_file(result, filename)
             response.update({'pdf': pdf_obj})
+        response.update({
+            'raw': result,
+            'status': True,
+        })
         return response
 

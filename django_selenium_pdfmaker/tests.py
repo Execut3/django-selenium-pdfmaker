@@ -12,6 +12,7 @@ class WhateverTest(TestCase):
 
         pdfmaker = PDFMaker()
         res = pdfmaker.get_pdf_from_html(path='https://google.com', filename='output', write=True)
+        self.assertTrue(res.get('status'))
         self.assertTrue(res.get('raw', None))
         self.assertTrue(res.get('pdf', ''))
 
@@ -20,3 +21,13 @@ class WhateverTest(TestCase):
 
         pdf_after_count = ConvertedPDF.objects.count()
         self.assertTrue(pdf_after_count == pdf_count + 1)
+
+    def test_notworking_html_to_pdf(self):
+        """ A test case to call a non-existing website. """
+        pdf_count = ConvertedPDF.objects.count()
+
+        pdfmaker = PDFMaker()
+        res = pdfmaker.get_pdf_from_html(path='https://ggsgfgsdgsfdgsfdgfd.om', filename='output-wrong', write=True)
+        self.assertFalse(res.get('status'))
+        self.assertTrue(pdf_count == ConvertedPDF.objects.count())
+

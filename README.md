@@ -24,7 +24,16 @@ and `res` includes:
 
 ```json
 {
+  "status": true,
   "raw": "pdf in binary format",
-  "pdf": "ConvertedPDF instance if write flag is True."
+  "pdf": "ConvertedPDF instance if write flag is True.",
+  "message": ""
 }
 ```
+
+- `status` is `true` when converting to pdf is successful, else will be `false`.
+For example when url path is unreachable `status` will be `false`.
+- `raw` is binary data of pdf before storing in file. Will hold data if `status == true`
+- `pdf` is `ConvertedPDF` object if `status` is `true`.
+- `message` will hold reason why `status` is `false`.
+
