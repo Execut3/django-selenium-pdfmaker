@@ -1,6 +1,5 @@
-import re
-from setuptools import setup
 from os import path
+from setuptools import setup
 
 project_path = path.abspath(path.dirname(__file__))
 
