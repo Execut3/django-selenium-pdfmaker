@@ -15,7 +15,6 @@ class WhateverTest(TestCase):
         self.assertTrue(res.get('raw', None))
         self.assertTrue(res.get('pdf', ''))
 
-        raw_pdf = res.get('raw')
         pdf_obj = res.get('pdf')
         self.assertTrue(pdf_obj.url.startswith('/media/converted-pdf'))
 
