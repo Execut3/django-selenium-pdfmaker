@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 .idea/*
+
+django_selenium_pdfmaker.egg-info/*
