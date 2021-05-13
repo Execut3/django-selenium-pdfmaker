@@ -7,6 +7,7 @@ import tempfile
 
 from selenium import webdriver
 from django.conf import settings
+from django.core.files.base import ContentFile, File
 from selenium.webdriver.chrome.options import Options
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -53,6 +54,7 @@ class PDFMaker:
         self.driver.set_window_size(1100, 1200)
 
     def send_devtools(self, cmd, params=None):
+        """ Check page and convert to pdf. """
         if params is None:
             params = {}
         resource = f"/session/{self.driver.session_id}/chromium/send_command_and_get_result"
@@ -64,11 +66,15 @@ class PDFMaker:
         return response.get('value')
 
     def store_to_file(self, result, filename):
+        """ Store pdf (result binary captured from prev step) into file and database.
+
+        media path is: /media/converted-pdf/...
+        """
+
         # Store in file and database model!
         from .models import ConvertedPDF
-        from django.core.files.base import ContentFile, File
-        c = ConvertedPDF(url='https://google.com')
 
+        c = ConvertedPDF(url='https://google.com')
         file_name = '{}.pdf'.format(filename)
         folder_path = os.path.join(settings.MEDIA_ROOT, 'converted-pdf')
         if not os.path.exists(folder_path):
@@ -80,8 +86,10 @@ class PDFMaker:
         c.file = 'converted-pdf/{}'.format(file_name)
         c.save()
 
-    def get_pdf_from_html(self, path, filename='file'):
-        """ This method is used to """
+        return c.file
+
+    def get_pdf_from_html(self, path, filename='output-pdf', write=True):
+        """ main method to call to make pdf. """
 
         self.driver.get(path)
 
@@ -98,8 +106,15 @@ class PDFMaker:
         calculated_print_options.update(self.print_options)
         result = self.send_devtools("Page.printToPDF", calculated_print_options)
         self.driver.quit()
+
         result = base64.b64decode(result['data'])
 
-        self.store_to_file(result, filename)
-        return result
+        response = {
+            'raw': result
+        }
+        if write:
+            # Write into database within /media/converted-pdf folder!
+            pdf_obj = self.store_to_file(result, filename)
+            response.update({'pdf': pdf_obj})
+        return response
 
