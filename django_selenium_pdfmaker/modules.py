@@ -1,16 +1,12 @@
 import os
-import sys
 import json
 import time
 import base64
-import tempfile
 
 from selenium import webdriver
 from django.conf import settings
-from django.core.files.base import ContentFile, File
 from selenium.webdriver.chrome.options import Options
 from django.utils.translation import ugettext_lazy as _
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 MODULE_PATH = os.path.abspath(__file__)     # Get path of current module file (modules.py file)
 DIR_PATH = os.path.dirname(MODULE_PATH)     # Folder of current python package for relative addressing.
