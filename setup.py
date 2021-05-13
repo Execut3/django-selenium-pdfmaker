@@ -21,6 +21,10 @@ setup(
     classifiers=[
         "Framework :: Django"
     ],
+    install_requires=[
+        "Django>=2.0",
+        "selenium"
+    ]
 )
 
 # python3 setup.py sdist bdist_wheel
