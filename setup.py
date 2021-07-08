@@ -10,7 +10,7 @@ setup(
     name='django-selenium-pdfmaker',
     packages=['django_selenium_pdfmaker'],
     license='GPT',
-    version='0.0.2',
+    version='0.0.3',
     description='A Light Django Application which uses selenium to convert any html page to pdf. Using this approach you can easily make pdf of HTML pages with charts, tables and having their loaded Styles.',
     long_description=long_description,
     long_description_content_type='text/markdown',
