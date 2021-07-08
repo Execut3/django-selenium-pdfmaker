@@ -3,10 +3,12 @@ import json
 import time
 import base64
 
-from .settings import *
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from django.utils.translation import ugettext_lazy as _
+
+from .settings import *
+
 
 MODULE_PATH = os.path.abspath(__file__)     # Get path of current module file (modules.py file)
 DIR_PATH = os.path.dirname(MODULE_PATH)     # Folder of current python package for relative addressing.
@@ -22,12 +24,13 @@ class PDFMaker:
     """
 
     driver = None
-    delay = 3   # 3 second delay before creating snapshot of viewed page, to fully load html
+    delay = 3   # second delay before creating snapshot of viewed page, to fully load html
     print_options = {}
     chromedriver = None
 
     save_file = True
     pdf_path = ''
+    url_path = ''  # Will be overrided
 
     def __init__(self, chromedriver=None, print_options=None, **kwargs):
         # This module uses google-chrome as driver of selenium to fetch pages!
@@ -35,7 +38,7 @@ class PDFMaker:
 
         # A simple delay to make driver waits to page fully loaded,
         # Increase if your page is heavy and late.
-        self.delay = kwargs.get('delay', 3)
+        self.delay = kwargs.get('delay', settings.SELENIUM_DELAY)
 
         # Creating options for webdriver (google-chrome)
         if print_options:
@@ -48,7 +51,7 @@ class PDFMaker:
 
         # Now create driver
         self.driver = webdriver.Chrome(self.chromedriver, options=webdriver_options)
-        self.driver.set_window_size(1100, 1200)
+        # self.driver.set_window_size(1100, 1200)
 
     def send_devtools(self, cmd, params=None):
         """ Check page and convert to pdf. """
@@ -94,6 +97,8 @@ class PDFMaker:
             'message': ''
         }
 
+        self.url_path = path        # Store to use later if want to save it in database!
+
         try:
             self.driver.get(path)
         except Exception as e:
@@ -105,7 +110,7 @@ class PDFMaker:
 
         # Add a delay so the page fully loaded,
         # Increase this value in case you have heavy loaded html page, which will be loaded longer!
-        time.sleep(3)
+        time.sleep(self.delay)
 
         calculated_print_options = {
             'landscape': False,
@@ -118,7 +123,6 @@ class PDFMaker:
         self.driver.quit()
 
         result = base64.b64decode(result['data'])
-
 
         if write:
             # Write into database within /media/converted-pdf folder!

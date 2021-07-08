@@ -7,3 +7,6 @@ DIR_PATH = os.path.dirname(MODULE_PATH)     # Folder of current python package f
 
 # Path to chromedriver should be provided, if not provided in project settings, use below!
 settings.CHROMEDRIVER_PATH = getattr(settings, 'CHROMEDRIVER_PATH', os.path.join(DIR_PATH, 'chromedriver'))
+
+# Delay to wait for page (html) to be loaded and generate pdf from it
+settings.SELENIUM_DELAY = getattr(settings, 'SELENIUM_DELAY', 3)
