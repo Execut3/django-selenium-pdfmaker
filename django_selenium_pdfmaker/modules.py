@@ -3,8 +3,8 @@ import json
 import time
 import base64
 
+from .settings import *
 from selenium import webdriver
-from django.conf import settings
 from selenium.webdriver.chrome.options import Options
 from django.utils.translation import ugettext_lazy as _
 
@@ -31,7 +31,7 @@ class PDFMaker:
 
     def __init__(self, chromedriver=None, print_options=None, **kwargs):
         # This module uses google-chrome as driver of selenium to fetch pages!
-        self.chromedriver = chromedriver if chromedriver else os.path.join(DIR_PATH, 'chromedriver')
+        self.chromedriver = chromedriver if chromedriver else settings.CHROMEDRIVER_PATH
 
         # A simple delay to make driver waits to page fully loaded,
         # Increase if your page is heavy and late.
