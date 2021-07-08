@@ -24,7 +24,8 @@ setup(
     install_requires=[
         "Django>=2.0",
         "selenium"
-    ]
+    ],
+    include_package_data=True,
 )
 
 # python3 setup.py sdist bdist_wheel
