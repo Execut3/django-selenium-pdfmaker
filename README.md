@@ -4,10 +4,10 @@ A Light Django Application which uses selenium to convert any html page to pdf. 
 
 ## Install
 
-simply just using pip:
+Install easily via pip:
 
 ```
-pip install django_selenium_pdfmaker
+pip install django-selenium-pdfmaker
 ```
 
 ## Usage
