@@ -4,10 +4,12 @@ from .models import *
 from .modules import *
 
 
-class WhateverTest(TestCase):
+class DjangoSeleniumPdfMakerTest(TestCase):
 
-    def test_html_to_pdf(self):
-        """ A test case to call google.com and store it as pdf in media folder. """
+    def test_html_to_pdf__valid_website(self):
+        """
+        A test case to call google.com and store it as pdf in media folder.
+        """
         pdf_count = ConvertedPDF.objects.count()
 
         pdfmaker = PDFMaker()
@@ -22,8 +24,10 @@ class WhateverTest(TestCase):
         pdf_after_count = ConvertedPDF.objects.count()
         self.assertTrue(pdf_after_count == pdf_count + 1)
 
-    def test_notworking_html_to_pdf(self):
-        """ A test case to call a non-existing website. """
+    def test_html_to_pdf__not_valid_website(self):
+        """
+        A test case to call a non-existing website.
+        """
         pdf_count = ConvertedPDF.objects.count()
 
         pdfmaker = PDFMaker()
