@@ -24,33 +24,51 @@ class PDFMaker:
     """
 
     driver = None
-    delay = 3   # second delay before creating snapshot of viewed page, to fully load html
     print_options = {}
-    chromedriver = None
+    chromedriver_path = None
+    delay = settings.SELENIUM_DELAY   # second delay before creating snapshot of viewed page, to fully load html
 
     save_file = True
     pdf_path = ''
     url_path = ''  # Will be overrided
 
-    def __init__(self, chromedriver=None, print_options=None, **kwargs):
+    def __init__(self, chromedriver_path=None, print_options=None, **kwargs):
         # This module uses google-chrome as driver of selenium to fetch pages!
-        self.chromedriver = chromedriver if chromedriver else settings.CHROMEDRIVER_PATH
+        self.chromedriver_path = chromedriver_path if chromedriver_path else settings.CHROMEDRIVER_PATH
 
         # A simple delay to make driver waits to page fully loaded,
         # Increase if your page is heavy and late.
-        self.delay = kwargs.get('delay', settings.SELENIUM_DELAY)
+        if 'delay' in kwargs.keys():
+            self.delay = kwargs.get('delay')
 
         # Creating options for webdriver (google-chrome)
         if print_options:
             self.print_options = print_options
         webdriver_options = Options()
         webdriver_options.add_argument('--headless')
+        webdriver_options.add_argument('--no-sandbox')
         webdriver_options.add_argument('--disable-gpu')
+        webdriver_options.add_argument('--disable-dev-shm-usage')
         if kwargs.get('debug', False):
             webdriver_options.add_argument("--remote-debugging-port=9222")
 
+        """
+        from selenium.webdriver.chrome.options import Options
+
+chrome_options = Options()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+d = webdriver.Chrome('/home/<user>/chromedriver',chrome_options=chrome_options)
+d.get('https://www.google.nl/')
+        """
+
+
         # Now create driver
-        self.driver = webdriver.Chrome(self.chromedriver, options=webdriver_options)
+        self.driver = webdriver.Chrome(
+            executable_path=self.chromedriver_path,
+            options=webdriver_options
+        )
         # self.driver.set_window_size(1100, 1200)
 
     def send_devtools(self, cmd, params=None):

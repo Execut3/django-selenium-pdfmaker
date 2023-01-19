@@ -23,7 +23,8 @@ setup(
     ],
     install_requires=[
         "Django>=2.0",
-        "selenium"
+        "selenium",
+        "webdriver-manager",
     ],
     include_package_data=True,
 )
