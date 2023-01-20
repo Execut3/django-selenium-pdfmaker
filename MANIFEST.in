@@ -3,6 +3,8 @@ include README.md
 include *.txt *.ini *.cfg *.rst
 recursive-include django_selenium_pdfmaker/chromedriver
 recursive-include django_selenium_pdfmaker/migrations *.py
+recursive-include django_selenium_pdfmaker/management *.py
+recursive-include django_selenium_pdfmaker/management/commands *.py
 recursive-include django_selenium_pdfmaker/locale *.mo
 recursive-include django_selenium_pdfmaker/locale *.po
 recursive-include django_selenium_pdfmaker *.ico *.png *.css *.gif *.jpg *.txt *.js *.html *.xml *.po *.mo
