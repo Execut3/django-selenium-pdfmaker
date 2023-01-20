@@ -93,7 +93,7 @@ class PDFMaker:
 
         return c.file
 
-    def get_pdf_from_html(self, url, filename='output-pdf', write=True, **kwargs):
+    def get_pdf_from_html(self, url=None, filename='output-pdf', write=True, **kwargs):
         """
         main method to call to make pdf.
 
@@ -106,6 +106,10 @@ class PDFMaker:
             'raw': None,        # Raw data binary of output pdf
             'message': ''
         }
+
+        # For backward compatibility
+        if not url:
+            url = kwargs.get('path', None)
 
         self.url_path = url
 
