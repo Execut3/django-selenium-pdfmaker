@@ -1,23 +1,23 @@
-import os
+import json
+import base64
 import json
 import time
-import base64
 
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from django.utils.translation import ugettext_lazy as _
-
 from .settings import *
 
-
-MODULE_PATH = os.path.abspath(__file__)     # Get path of current module file (modules.py file)
-DIR_PATH = os.path.dirname(MODULE_PATH)     # Folder of current python package for relative addressing.
+MODULE_PATH = os.path.abspath(__file__)  # Get path of current module file (modules.py file)
+DIR_PATH = os.path.dirname(MODULE_PATH)  # Folder of current python package for relative addressing.
 
 
 class PDFMaker:
     """ Main class to handle methods to capture an html page into pdf.
-    Structure is as follow:
 
+    Structure is as follow:
     - initiate class objects with provided attributes.
     - use selenium to visit url-path and convert it to pdf
     - write pdf in database and media/converted-pdf folder.
@@ -26,7 +26,7 @@ class PDFMaker:
     driver = None
     print_options = {}
     chromedriver_path = None
-    delay = settings.SELENIUM_DELAY   # second delay before creating snapshot of viewed page, to fully load html
+    delay = settings.SELENIUM_DELAY  # second delay before creating snapshot of viewed page, to fully load html
 
     save_file = True
     pdf_path = ''
@@ -34,45 +34,34 @@ class PDFMaker:
 
     def __init__(self, chromedriver_path=None, print_options=None, **kwargs):
         # This module uses google-chrome as driver of selenium to fetch pages!
-        self.chromedriver_path = chromedriver_path if chromedriver_path else settings.CHROMEDRIVER_PATH
+        if settings.CHROMEDRIVER_PATH:
+            self.chromedriver_path = settings.CHROMEDRIVER_PATH
+        else:
+            self.chromedriver_path = ChromeDriverManager().install()
 
         # A simple delay to make driver waits to page fully loaded,
         # Increase if your page is heavy and late.
         if 'delay' in kwargs.keys():
             self.delay = kwargs.get('delay')
 
-        # Creating options for webdriver (google-chrome)
-        if print_options:
-            self.print_options = print_options
-        webdriver_options = Options()
-        webdriver_options.add_argument('--headless')
-        webdriver_options.add_argument('--no-sandbox')
-        webdriver_options.add_argument('--disable-gpu')
-        webdriver_options.add_argument('--disable-dev-shm-usage')
-        if kwargs.get('debug', False):
-            webdriver_options.add_argument("--remote-debugging-port=9222")
-
-        """
-        from selenium.webdriver.chrome.options import Options
-
-chrome_options = Options()
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')
-d = webdriver.Chrome('/home/<user>/chromedriver',chrome_options=chrome_options)
-d.get('https://www.google.nl/')
-        """
-
-
-        # Now create driver
+        options = Options()
+        options.add_argument("headless")  # // open Browser in maximized mode
+        # options.add_argument("start-maximized")  # // open Browser in maximized mode
+        options.add_argument("disable-infobars")  # // disabling infobars
+        options.add_argument("--disable-extensions")  # // disabling extensions
+        options.add_argument("--disable-gpu")  # // applicable to windows os only
+        options.add_argument("--disable-dev-shm-usage")  # // overcome limited resource problems
+        options.add_argument("--no-sandbox")  # // Bypass OS security model
+        caps = DesiredCapabilities().CHROME
+        caps["pageLoadStrategy"] = "none"  # Do not wait for full page
         self.driver = webdriver.Chrome(
-            executable_path=self.chromedriver_path,
-            options=webdriver_options
+            options=options,
+            executable_path=self.chromedriver_path
         )
-        # self.driver.set_window_size(1100, 1200)
+        # # self.driver.set_window_size(1100, 1200)
 
     def send_devtools(self, cmd, params=None):
-        """ Check page and convert to pdf. """
+        """ Check page, get content and convert to pdf. """
         if params is None:
             params = {}
         resource = f"/session/{self.driver.session_id}/chromium/send_command_and_get_result"
@@ -109,13 +98,13 @@ d.get('https://www.google.nl/')
     def get_pdf_from_html(self, path, filename='output-pdf', write=True):
         """ main method to call to make pdf. """
         response = {
-            'status': False,            # Status of operation
-            'pdf': None,                # pdf object (ConvertedPDF instance)
-            'raw': None,                # Raw data binary of output pdf
+            'status': False,  # Status of operation
+            'pdf': None,  # pdf object (ConvertedPDF instance)
+            'raw': None,  # Raw data binary of output pdf
             'message': ''
         }
 
-        self.url_path = path        # Store to use later if want to save it in database!
+        self.url_path = path  # Store to use later if want to save it in database!
 
         try:
             self.driver.get(path)
@@ -126,9 +115,9 @@ d.get('https://www.google.nl/')
             })
             return response
 
-        # Add a delay so the page fully loaded,
-        # Increase this value in case you have heavy loaded html page, which will be loaded longer!
-        time.sleep(self.delay)
+        # # # Add a delay so the page fully loaded,
+        # # # Increase this value in case you have heavy loaded html page, which will be loaded longer!
+        # time.sleep(self.delay)
 
         calculated_print_options = {
             'landscape': False,
@@ -151,4 +140,3 @@ d.get('https://www.google.nl/')
             'status': True,
         })
         return response
-
