@@ -19,7 +19,7 @@ To use this module:
 ```python
 from django_selenium_pdfmaker.modules import PDFMaker
 pdfmaker = PDFMaker()
-res = pdfmaker.get_pdf_from_html(path='https://google.com', filename='output', write=True)
+res = pdfmaker.get_pdf_from_html(url='https://google.com', filename='output', write=True)
 ```
 
 and `res` includes:

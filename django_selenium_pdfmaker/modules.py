@@ -32,7 +32,7 @@ class PDFMaker:
     pdf_path = ''
     url_path = ''  # Will be overrided
 
-    def __init__(self, chromedriver_path=None, print_options=None, **kwargs):
+    def __init__(self, **kwargs):
         # This module uses google-chrome as driver of selenium to fetch pages!
         if settings.CHROMEDRIVER_PATH:
             self.chromedriver_path = settings.CHROMEDRIVER_PATH
@@ -45,15 +45,14 @@ class PDFMaker:
             self.delay = kwargs.get('delay')
 
         options = Options()
-        options.add_argument("headless")  # // open Browser in maximized mode
-        # options.add_argument("start-maximized")  # // open Browser in maximized mode
-        options.add_argument("disable-infobars")  # // disabling infobars
-        options.add_argument("--disable-extensions")  # // disabling extensions
-        options.add_argument("--disable-gpu")  # // applicable to windows os only
-        options.add_argument("--disable-dev-shm-usage")  # // overcome limited resource problems
-        options.add_argument("--no-sandbox")  # // Bypass OS security model
-        caps = DesiredCapabilities().CHROME
-        caps["pageLoadStrategy"] = "none"  # Do not wait for full page
+        options.add_argument("headless")                    # open Browser in maximized mode
+        options.add_argument("disable-infobars")            # disabling infobars
+        options.add_argument("--disable-extensions")        # disabling extensions
+        options.add_argument("--disable-gpu")               # applicable to windows os only
+        options.add_argument("--disable-dev-shm-usage")     # overcome limited resource problems
+        options.add_argument("--no-sandbox")                # Bypass OS security model
+        # caps = DesiredCapabilities().CHROME
+        # caps["pageLoadStrategy"] = "none"                   # Do not wait for full page
         self.driver = webdriver.Chrome(
             options=options,
             executable_path=self.chromedriver_path
@@ -77,7 +76,6 @@ class PDFMaker:
 
         media path is: /media/converted-pdf/...
         """
-
         # Store in file and database model!
         from .models import ConvertedPDF
 
@@ -95,16 +93,21 @@ class PDFMaker:
 
         return c.file
 
-    def get_pdf_from_html(self, path, filename='output-pdf', write=True):
-        """ main method to call to make pdf. """
+    def get_pdf_from_html(self, url, filename='output-pdf', write=True, **kwargs):
+        """
+        main method to call to make pdf.
+
+        @:param filename: default output file name will be output-pdf.pdf
+        @:param write: if True, meaning write to database on model ConvertedPDF
+        """
         response = {
-            'status': False,  # Status of operation
-            'pdf': None,  # pdf object (ConvertedPDF instance)
-            'raw': None,  # Raw data binary of output pdf
+            'status': False,    # Status of operation
+            'pdf': None,        # pdf object (ConvertedPDF instance)
+            'raw': None,        # Raw data binary of output pdf
             'message': ''
         }
 
-        self.url_path = path
+        self.url_path = url
 
         try:
             self.driver.get(self.url_path)
@@ -132,10 +135,11 @@ class PDFMaker:
 
         result = base64.b64decode(result['data'])
 
+        # Write into database within /media/converted-pdf folder!
         if write:
-            # Write into database within /media/converted-pdf folder!
             pdf_obj = self.store_to_file(result, filename)
             response.update({'pdf': pdf_obj})
+
         response.update({
             'raw': result,
             'status': True,
