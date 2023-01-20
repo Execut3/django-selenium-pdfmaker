@@ -104,20 +104,21 @@ class PDFMaker:
             'message': ''
         }
 
-        self.url_path = path  # Store to use later if want to save it in database!
+        self.url_path = path
 
         try:
-            self.driver.get(path)
+            self.driver.get(self.url_path)
         except Exception as e:
-            print('[-] Error happened fetching html page.')
+            print(f'[-] Error happened fetching html page. {e}')
             response.update({
                 'message': _('Unable to connect to request URL')
             })
             return response
 
-        # # # Add a delay so the page fully loaded,
-        # # # Increase this value in case you have heavy loaded html page, which will be loaded longer!
-        # time.sleep(self.delay)
+        # Add a delay so the page fully loaded,
+        # Increase this value in case you have heavy loaded html page, which will be loaded longer!
+        if self.delay:
+            time.sleep(self.delay)
 
         calculated_print_options = {
             'landscape': False,

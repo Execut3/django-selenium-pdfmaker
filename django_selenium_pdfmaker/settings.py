@@ -9,4 +9,4 @@ DIR_PATH = os.path.dirname(MODULE_PATH)  # Folder of current python package for 
 settings.CHROMEDRIVER_PATH = ''
 
 # Delay to wait for page (html) to be loaded and generate pdf from it
-settings.SELENIUM_DELAY = getattr(settings, 'SELENIUM_DELAY', 3)
+settings.SELENIUM_DELAY = getattr(settings, 'SELENIUM_DELAY', 0)
