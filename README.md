@@ -12,9 +12,28 @@ pip install django-selenium-pdfmaker
 
 Then add package name `django_selenium_pdfmaker` to the INSTALLED_APPS of django.
 
+### Installation Chrome/chromedriver
+
+To use this package, `google-chrome` and proper `chromedriver` should be installed on OS.
+
+To install google chrome, use command below:
+
+```bash
+sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add 
+sudo bash -c "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list" 
+sudo apt -y update 
+sudo apt -y install google-chrome-stable 
+```
+
+And to have latest `chromedriver` use management command below:
+
+```bash
+./manage.py pdfmaker_install_chromedriver
+```
+
 ## Usage
 
-To use this module:
+To use this module use code below.
 
 ```python
 from django_selenium_pdfmaker.modules import PDFMaker
@@ -22,7 +41,7 @@ pdfmaker = PDFMaker()
 res = pdfmaker.get_pdf_from_html(url='https://google.com', filename='output', write=True)
 ```
 
-and `res` includes:
+Which will load url in chromedriver and return proper results in `res` json. which includes:
 
 ```json
 {
@@ -44,24 +63,13 @@ For example when url path is unreachable `status` will be `false`.
 ```
 CHROMEDRIVER_PATH
 ```
-Override this variable to address the binary file of chromedriver of your own.
+Override this variable to address the binary file of chromedriver of your own. Optional.
 
 ```
 SELENIUM_DELAY
 ```
 To set delay on selenium requests (default 3). it will last that amount of time crawling
-requested page before closing the session and create pdf of it. 
-
-## Installation Chrome
-
-Be noted to use this package google-chrome in your os. To install on ubuntu use following commads:
-
-```bash
-sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add 
-sudo bash -c "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list" 
-sudo apt -y update 
-sudo apt -y install google-chrome-stable 
-```
+requested page before closing the session and create pdf of it. Optional and default to 0.
 
 ## Exceptions
 
