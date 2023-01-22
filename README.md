@@ -85,15 +85,7 @@ CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
 Also you can use below script to automatically fix this problem:
 
 ```bash
-pip install webdriver-manager
+./manage.py pdfmaker_install_chromedriver
 ```
 
-Then use the driver in python as follows
-
-```python
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-
-driver = webdriver.Chrome(ChromeDriverManager().install())
-```
-You can find the solution [link](https://stackoverflow.com/questions/60296873/sessionnotcreatedexception-message-session-not-created-this-version-of-chrome)
+[Link](https://github.com/Execut3/django-selenium-pdfmaker/issues/4)
