@@ -12,11 +12,11 @@ pip install django-selenium-pdfmaker
 
 Then add package name `django_selenium_pdfmaker` to the INSTALLED_APPS of django.
 
-### Installation Chrome/chromedriver
+### Installation of Google-Chrome & chromedriver
 
-To use this package, `google-chrome` and proper `chromedriver` should be installed on OS.
+To use this package, `google-chrome` and proper `chromedriver` should be installed on your Operating System.
 
-To install google chrome, use command below:
+To install google chrome:
 
 ```bash
 sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add 
@@ -25,7 +25,7 @@ sudo apt -y update
 sudo apt -y install google-chrome-stable 
 ```
 
-And to have latest `chromedriver` use management command below:
+And to have latest `chromedriver` A python management command is developed:
 
 ```bash
 ./manage.py pdfmaker_install_chromedriver
@@ -33,7 +33,7 @@ And to have latest `chromedriver` use management command below:
 
 ## Usage
 
-To use this module use code below.
+To use this module, try to create an instance of `PDFMaker` class, then call `get_pdf_from_html` method.
 
 ```python
 from django_selenium_pdfmaker.modules import PDFMaker
