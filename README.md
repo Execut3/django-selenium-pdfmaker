@@ -68,7 +68,7 @@ Override this variable to address the binary file of chromedriver of your own. O
 ```
 SELENIUM_DELAY=0
 ```
-To set delay on selenium requests (default 3). it will last that amount of time crawling
+To set delay on selenium requests (default 0). it will last that amount of time crawling
 requested page before closing the session and create pdf of it. Optional and default to 0.
 
 ## Exceptions
