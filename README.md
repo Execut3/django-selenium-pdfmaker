@@ -61,12 +61,12 @@ For example when url path is unreachable `status` will be `false`.
 ## Settings
 
 ```
-CHROMEDRIVER_PATH
+CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 ```
 Override this variable to address the binary file of chromedriver of your own. Optional.
 
 ```
-SELENIUM_DELAY
+SELENIUM_DELAY=0
 ```
 To set delay on selenium requests (default 3). it will last that amount of time crawling
 requested page before closing the session and create pdf of it. Optional and default to 0.
