@@ -6,7 +6,7 @@ A Light Django Application which uses selenium to convert any html page to pdf. 
 
 Install easily via pip:
 
-```
+```bash
 pip install django-selenium-pdfmaker
 ```
 
@@ -60,12 +60,12 @@ For example when url path is unreachable `status` will be `false`.
 
 ## Settings
 
-```
+```python
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 ```
 Override this variable to address the binary file of chromedriver of your own. Optional.
 
-```
+```python
 SELENIUM_DELAY=0
 ```
 To set delay on selenium requests (Default 0). This option is usefull for websites having javascripts, lazy loading and features which need to be loaded on the website. By setting this value, you will tell selenium after fetching website content, wait for `SELENIUM_DELAY` seconds, till website is fully loaded.
