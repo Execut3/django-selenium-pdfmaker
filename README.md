@@ -1,5 +1,5 @@
 # django-selenium-pdfmaker
-A Light Django Application which uses selenium to convert any html page to pdf. Using this approach you can easily convert any HTML page with charts, tables and ... to PDF.
+A Light Django Application which uses selenium to convert html pages to pdf. Using this approach you can easily convert any HTML page with charts, tables and ... to PDF.
 
 
 ## Install
